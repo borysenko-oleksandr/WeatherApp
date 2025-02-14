@@ -6,3 +6,15 @@
 //
 
 import Foundation
+import SwiftUI
+
+class HomeViewModel: ObservableObject {
+    @Published var cards: [WeatherInfo] = []
+    
+    func fetchData() {
+        let cities = CoreDataService.shared.fetchFavoriteCity()
+        cards = cities.map { city in
+            return CoreDataService.shared.getWeatherInfoBy(name: city.name)!
+        }
+    }
+}

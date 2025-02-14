@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23605" systemVersion="23H417" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="CDFavoriteCity" representedClassName="CDFavoriteCity" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="CDSys" representedClassName="Sys" syncable="YES">
+        <attribute name="country" optional="YES" attributeType="String"/>
+        <attribute name="sunrise" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sunset" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="weatherInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDWeatherInfo"/>
+    </entity>
+    <entity name="CDWeatherInfo" representedClassName="CDWeatherInfo" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="timeinterval" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="main" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDWeatherInfoMain"/>
+        <relationship name="sys" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDSys"/>
+        <relationship name="weather" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="CDWeatherInfoDetails"/>
+        <fetchedProperty name="fetchedProperty" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="CDWeatherInfo"/>
+        </fetchedProperty>
+    </entity>
+    <entity name="CDWeatherInfoDetails" representedClassName="CDWeatherInfoDetails" syncable="YES">
+        <attribute name="icon" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="main" optional="YES" attributeType="String"/>
+        <relationship name="weatherInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDWeatherInfo"/>
+    </entity>
+    <entity name="CDWeatherInfoMain" representedClassName="CDWeatherInfoMain" syncable="YES">
+        <attribute name="feels_like" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="temp" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="temp_max" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="temp_min" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="weatherInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CDWeatherInfo"/>
+    </entity>
+</model>
