@@ -56,7 +56,7 @@ private extension SearchViewModel {
             }
             let savedData = CoreDataService.shared.getWeatherInfoBy(name: cityName)
             
-            if let cdWeather = savedData, Date().timeIntervalSince(cdWeather.timeinterval!) < AppConstants.treeHours.rawValue {
+            if let cdWeather = savedData, Date().timeIntervalSince(cdWeather.timeinterval!) < AppConstants.threeHours.rawValue {
                 weatherInfo = cdWeather
             } else {
                 let result = try await fetchService.getWeatherBy(cityName: cityName)

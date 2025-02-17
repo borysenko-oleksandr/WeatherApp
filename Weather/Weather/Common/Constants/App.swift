@@ -8,5 +8,5 @@
 import Foundation
 
 enum AppConstants: Double {
-    case treeHours = 10800
+    case threeHours = 10800
 }
