@@ -55,56 +55,6 @@ extension CoreDataService {
 
         CoreDataService.shared.save(context: context)
     }
-    
-//    func fetchFavoriteCity() -> [FavoriteCity]? {
-//        let fetchRequest = CDFavoriteCity.fetchRequest()
-//        
-//        do {
-//            let result = try context.fetch(fetchRequest)
-//            return result.map {item in
-//                return FavoriteCity(id: item.id, name: item.name)
-//            }
-//        } catch {
-//            print("Error fetching favorite city: \(error)")
-//            return []
-//        }
-//    }
-    
-//    func fetchWeatherInfo() -> [WeatherInfo] {
-//        let fetchRequest = CDWeatherInfo.fetchRequest()
-//        
-//        do {
-//            let results = try context.fetch(fetchRequest)
-//            return results.map { cdWeather in
-//                WeatherInfo(
-//                    id: cdWeather.id,
-//                    name: cdWeather.name ?? "",
-//                    main: WeatherInfoMain(
-//                        temp: cdWeather.main?.temp ?? 0.0,
-//                        feels_like: cdWeather.main?.feels_like ?? 0.0,
-//                        temp_min: cdWeather.main?.temp_min ?? 0.0,
-//                        temp_max: cdWeather.main?.temp_max ?? 0.0
-//                    ),
-//                    weather: (cdWeather.weather as? Set<CDWeatherInfoDetails>)?.map { cdDetail in
-//                        WeatherInfoDetails(
-//                            id: cdDetail.id,
-//                            main: cdDetail.main ?? "",
-//                            icon: cdDetail.icon ?? ""
-//                        )
-//                    } ?? [],
-//                    sys: SysDetails(
-//                        country: cdWeather.sys?.country ?? "",
-//                        sunrise: cdWeather.sys?.sunrise ?? 0,
-//                        sunset: cdWeather.sys?.sunset ?? 0
-//                    ),
-//                    timeinterval: cdWeather.timeinterval
-//                )
-//            }
-//        } catch {
-//            print("Error fetching weather info: \(error)")
-//            return []
-//        }
-//    }
 
     func removeFavoriteBy(id: Int64) {
         let fetchRequest: NSFetchRequest<CDFavoriteCity> = CDFavoriteCity.fetchRequest()
