@@ -8,13 +8,20 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 class HomeViewModel: ObservableObject {
     @Published var cards: [WeatherInfo] = []
+    var fetchService = WeatherDataLoader()
     
-    func fetchData() {
+    func fetchData() async {
         let cities = CoreDataService.shared.fetchFavoriteCity()
-        cards = cities.map { city in
-            return CoreDataService.shared.getWeatherInfoBy(name: city.name)!
+        var results: [WeatherInfo] = []
+        
+        for city in cities {
+            if let weather = await fetchService.getWeatherBy(cityName: city.name) {
+                results.append(weather)
+            }
         }
+        cards = results
     }
 }

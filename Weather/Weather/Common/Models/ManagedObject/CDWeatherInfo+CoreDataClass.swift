@@ -2,7 +2,7 @@
 //  CDWeatherInfo+CoreDataClass.swift
 //  Weather
 //
-//  Created by Oleksandr Borysenko on 11.02.2025.
+//  Created by Oleksandr Borysenko on 17.02.2025.
 //
 //
 

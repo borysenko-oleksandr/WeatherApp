@@ -14,6 +14,7 @@ struct WeatherInfo: Decodable {
     var weather: [WeatherInfoDetails]
     var sys: SysDetails
     var timeinterval: Date?
+    var coord: WeatherCoordinates
 }
 
 struct WeatherInfoMain: Decodable {
@@ -33,4 +34,9 @@ struct SysDetails: Decodable {
     var country: String
     var sunrise: Int64
     var sunset: Int64
+}
+
+struct WeatherCoordinates: Decodable {
+    var lat: Double
+    var lon: Double
 }

@@ -10,10 +10,14 @@ import CoreData
 
 extension CoreDataService {
     func saveWeatherInfo(weatherInfo: WeatherInfo) {
-        let cdWeatherInfo = CDWeatherInfo(context: context)
-        
-        cdWeatherInfo.id = weatherInfo.id
-        cdWeatherInfo.name = weatherInfo.name
+        var cdWeatherInfo: CDWeatherInfo
+        if let savedInfo = fetchCDWeatherInfoObjectBy(id: weatherInfo.id) {
+            cdWeatherInfo = savedInfo
+        } else {
+            cdWeatherInfo = CDWeatherInfo(context: context)
+            cdWeatherInfo.id = weatherInfo.id
+            cdWeatherInfo.name = weatherInfo.name
+        }
         
         let cdMain = CDWeatherInfoMain(context: context)
         cdMain.temp = weatherInfo.main.temp
@@ -43,28 +47,19 @@ extension CoreDataService {
         
         cdWeatherInfo.timeinterval = Date.now
         
-        CoreDataService.shared.save(context: context)
+        let coordinates = CDCoord(context: context)
+        coordinates.lat = convertDouble(weatherInfo.coord.lat)
+        coordinates.lon = convertDouble(weatherInfo.coord.lon)
+        cdWeatherInfo.coord = coordinates
+        
+        save(context: context)
         
     }
-    
-    func saveFavoriteCity(city: FavoriteCity) {
-        let cdFavoriteCity = CDFavoriteCity(context: context)
-        
-        cdFavoriteCity.id = city.id
-        cdFavoriteCity.name = city.name
 
-        CoreDataService.shared.save(context: context)
-    }
-
-    func removeFavoriteBy(id: Int64) {
-        let fetchRequest: NSFetchRequest<CDFavoriteCity> = CDFavoriteCity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
-        CoreDataService.shared.deleteRecords(CDFavoriteCity.self, fetchRequest: fetchRequest)
-    }
-    
     func getWeatherInfoBy(name: String) -> WeatherInfo? {
         let fetchRequest: NSFetchRequest<CDWeatherInfo> = CDWeatherInfo.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "name == %@", name)
+        
         let result = fetchDataFromEntity(CDWeatherInfo.self,
                             context: context,
                             fetchRequest: fetchRequest,
@@ -93,40 +88,84 @@ extension CoreDataService {
                     sunrise: cdWeather.sys?.sunrise ?? 0,
                     sunset: cdWeather.sys?.sunset ?? 0
                 ),
-                timeinterval: cdWeather.timeinterval
+                timeinterval: cdWeather.timeinterval,
+                coord: WeatherCoordinates(lat: cdWeather.coord!.lat, lon: cdWeather.coord!.lon)
             )
         }
         return nil
     }
     
-    
-    func fetchFavoriteCity() -> [FavoriteCity] {
-        let fetchRequest = CDFavoriteCity.fetchRequest()
+    func getWeatherInfoBy(coordinates: Coordinates) -> WeatherInfo? {
+        let weatherInfo = fetchCDWeatherInfoObjectBy(coordinates: coordinates)
         
-        do {
-            let results = try context.fetch(fetchRequest)
-            
-            return results.map { item in
-                FavoriteCity(id: item.id, name: item.name)
-            }
-        } catch {
-            return []
+        if let cdWeather = weatherInfo {
+            return WeatherInfo(
+                id: cdWeather.id,
+                name: cdWeather.name ?? "",
+                main: WeatherInfoMain(
+                    temp: cdWeather.main?.temp ?? 0.0,
+                    feels_like: cdWeather.main?.feels_like ?? 0.0,
+                    temp_min: cdWeather.main?.temp_min ?? 0.0,
+                    temp_max: cdWeather.main?.temp_max ?? 0.0
+                ),
+                weather: (cdWeather.weather as? Set<CDWeatherInfoDetails>)?.map { cdDetail in
+                    WeatherInfoDetails(
+                        id: cdDetail.id,
+                        main: cdDetail.main ?? "",
+                        icon: cdDetail.icon ?? ""
+                    )
+                } ?? [],
+                sys: SysDetails(
+                    country: cdWeather.sys?.country ?? "",
+                    sunrise: cdWeather.sys?.sunrise ?? 0,
+                    sunset: cdWeather.sys?.sunset ?? 0
+                ),
+                timeinterval: cdWeather.timeinterval,
+                coord: WeatherCoordinates(lat: cdWeather.coord!.lat, lon: cdWeather.coord!.lon)
+            )
         }
-    }
-    
-    func fetchFavoriteCityBy(id: Int64) -> FavoriteCity? {
-        let fetchRequest: NSFetchRequest<CDFavoriteCity> = CDFavoriteCity.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
-        let cdResult = fetchDataFromEntity(CDFavoriteCity.self,
-                            context: context,
-                            fetchRequest: fetchRequest,
-                            sort: nil,
-                            wantFault: false)
-        
-        if let result = cdResult.first {
-            return FavoriteCity(id: result.id, name: result.name)
-        } else {
-            return nil
-        }
+        return nil
     }
 }
+
+// MARK: - Private methods
+private extension CoreDataService {
+    func fetchCDWeatherInfoObjectBy(id: Int64) -> CDWeatherInfo? {
+        let fetchRequest: NSFetchRequest<CDWeatherInfo> = CDWeatherInfo.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %d", id)
+        
+        do {
+            let result = fetchDataFromEntity(CDWeatherInfo.self,
+                                context: context,
+                                fetchRequest: fetchRequest,
+                                sort: nil,
+                                wantFault: false)
+            return result.first
+        }
+    }
+    
+    func fetchCDWeatherInfoObjectBy(coordinates: Coordinates) -> CDWeatherInfo? {
+        let lat = Double(coordinates.lat.replacingOccurrences(of: ",", with: "."))
+        let long = Double(coordinates.long.replacingOccurrences(of: ",", with: "."))
+        
+        let fetchRequest: NSFetchRequest<CDWeatherInfo> = CDWeatherInfo.fetchRequest()
+        
+        if let latitute = lat, let longitude = long {
+            fetchRequest.predicate = NSPredicate(format: "coord.lat == %f AND coord.lon == %f", convertDouble(latitute), convertDouble(longitude))
+            
+            do {
+                let results = try context.fetch(fetchRequest)
+                return results.first
+            } catch {
+                print("Error fetching weather by coordinates: \(error)")
+                return nil
+            }
+        }
+        return nil
+    }
+    
+    func convertDouble(_ value: Double) -> Double {
+        return round(100 * value) / 100
+    }
+}
+ 

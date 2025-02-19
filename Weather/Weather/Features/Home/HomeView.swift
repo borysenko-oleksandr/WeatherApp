@@ -45,7 +45,7 @@ struct HomeView: View {
                             .onTapGesture {
                                 Task {
                                     CoreDataService.shared.removeFavoriteBy(id: info.id)
-                                    viewModel.fetchData()
+                                    await viewModel.fetchData()
                                 }
                             }
                     }
@@ -57,7 +57,7 @@ struct HomeView: View {
             
         }.onAppear {
             Task {
-                viewModel.fetchData()
+                await viewModel.fetchData()
             }
         }
     }
