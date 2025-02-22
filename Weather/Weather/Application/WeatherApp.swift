@@ -6,12 +6,23 @@
 //
 
 import SwiftUI
+import Lottie
 
 @main
 struct WeatherApp: App {
+    @State private var isReady = false
+    
     var body: some Scene {
         WindowGroup {
-            MainRouter()
+            if isReady {
+                MainRouter()
+            } else {
+                LottieView(animation: .named("launchScreen"))
+                    .playing()
+                    .animationDidFinish { _ in
+                        isReady = true
+                    }
+            }
         }
     }
 }
