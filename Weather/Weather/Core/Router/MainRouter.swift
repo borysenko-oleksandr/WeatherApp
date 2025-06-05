@@ -23,12 +23,6 @@ struct MainRouter: View {
                     Label("Search", systemImage: "magnifyingglass")
                 }
                 .tag(Tab.search)
-            
-            SettingsView()
-                .tabItem {
-                    Label("Setting", systemImage: "gearshape.fill")
-                }
-                .tag(Tab.setting)
         }
         .onAppear {
             viewModel.handleInitialScreen()
