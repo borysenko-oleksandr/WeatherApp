@@ -24,7 +24,6 @@ struct SearchView: View {
             }
             
             ZStack {
-                
                 if viewModel.selectedSegment == .searchByCityName {
                     SearchByName(cityName: $viewModel.cityName, onSubmit: { text in
                         viewModel.cityName = text
@@ -48,7 +47,12 @@ struct SearchView: View {
             .animation(.easeInOut(duration: 0.25), value: viewModel.selectedSegment)
             
     
-            WeatherContentView(card: $viewModel.weatherInfo, loading: $viewModel.loading)
+            WeatherContentView(
+                card: $viewModel.weatherInfo,
+                loading: $viewModel.loading
+            ) { city in
+                viewModel.handlePressPlusButton(city: city)
+            }
                 .padding(.horizontal, 20)
                 .padding(.top, 30)
             

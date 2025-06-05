@@ -28,8 +28,7 @@ struct SegmentController: View {
             handleChange()
         }
         .padding()
-        
-
+    
     }
 }
 
