@@ -8,11 +8,13 @@
 import Foundation
 
 struct WeatherInfo: Decodable {
-    var id: Int
+    var id: Int64
     var name: String
     var main: WeatherInfoMain
     var weather: [WeatherInfoDetails]
     var sys: SysDetails
+    var timeinterval: Date?
+    var coord: WeatherCoordinates
 }
 
 struct WeatherInfoMain: Decodable {
@@ -23,14 +25,18 @@ struct WeatherInfoMain: Decodable {
 }
 
 struct WeatherInfoDetails: Decodable {
-    var id: Int
+    var id: Int64
     var main: String
-    var description: String
     var icon: String
 }
 
 struct SysDetails: Decodable {
     var country: String
-    var sunrise: Int
-    var sunset: Int
+    var sunrise: Int64
+    var sunset: Int64
+}
+
+struct WeatherCoordinates: Decodable {
+    var lat: Double
+    var lon: Double
 }

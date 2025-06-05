@@ -18,7 +18,7 @@ class SearchViewModel: ObservableObject {
     @Published var loading: Bool = false
     @Published var weatherInfo: WeatherInfo?
     
-    var fetchService = FeatchWeatherInfo()
+    var fetchService = WeatherDataLoader()
     
     func handlePressButton() async {
         do {
@@ -37,6 +37,14 @@ class SearchViewModel: ObservableObject {
         coordinates = (lat: "", long: "")
         weatherInfo = nil
     }
+    
+    func handlePressPlusButton(city: FavoriteCity) {
+        let prevResult = CoreDataService.shared.fetchFavoriteCityBy(id: city.id)
+        
+        if prevResult?.id == nil {
+            CoreDataService.shared.saveFavoriteCity(city: city)
+        }
+    }
 }
 
 // MARK: - Private methods
@@ -46,12 +54,7 @@ private extension SearchViewModel {
             guard cityName.count > 0 else {
                 return
             }
-            
-           let result = try await fetchService.getWeatherBy(cityName: cityName)
-            
-            weatherInfo = result
-        } catch {
-            
+            weatherInfo = await fetchService.getWeatherBy(cityName: cityName)
         }
     }
     
@@ -60,12 +63,7 @@ private extension SearchViewModel {
             guard coordinates.lat.count > 0 && coordinates.long.count > 0 else {
                 return
             }
-            
-            let result = try await fetchService.getWeatherBy(coordinates: coordinates)
-            
-            weatherInfo = result
-        } catch {
-            
+            weatherInfo = await fetchService.getWeatherBy(coordinates: coordinates)
         }
     }
 }

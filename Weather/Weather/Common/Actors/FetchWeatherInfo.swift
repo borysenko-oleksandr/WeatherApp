@@ -1,5 +1,5 @@
 //
-//  FeatchWeatherInfo.swift
+//  FetchWeatherInfo.swift
 //  Weather
 //
 //  Created by Oleksandr Borysenko on 09.02.2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-actor FeatchWeatherInfo {
+actor FetchWeatherInfo {
     func getWeatherBy(cityName: String) async throws -> WeatherInfo {
         do {
             let result = try await APIService.shared.httpRequest(

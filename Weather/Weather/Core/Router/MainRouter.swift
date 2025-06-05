@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct MainRouter: View {
-    @State var selection: Tab = .search
+    @StateObject var viewModel = MainRouterViewModel()
     
     var body: some View {
-        TabView(selection: $selection) {
+        TabView(selection: $viewModel.selection) {
             HomeView()
                 .tabItem {
                     Label("Home", systemImage: "house.fill")
@@ -23,12 +23,9 @@ struct MainRouter: View {
                     Label("Search", systemImage: "magnifyingglass")
                 }
                 .tag(Tab.search)
-            
-            SettingsView()
-                .tabItem {
-                    Label("Setting", systemImage: "gearshape.fill")
-                }
-                .tag(Tab.setting)
+        }
+        .onAppear {
+            viewModel.handleInitialScreen()
         }
     }
 }
