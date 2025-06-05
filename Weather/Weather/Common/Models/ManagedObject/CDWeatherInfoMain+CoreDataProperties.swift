@@ -2,7 +2,7 @@
 //  CDWeatherInfoMain+CoreDataProperties.swift
 //  Weather
 //
-//  Created by Oleksandr Borysenko on 11.02.2025.
+//  Created by Oleksandr Borysenko on 17.02.2025.
 //
 //
 
@@ -16,10 +16,10 @@ extension CDWeatherInfoMain {
         return NSFetchRequest<CDWeatherInfoMain>(entityName: "CDWeatherInfoMain")
     }
 
-    @NSManaged public var temp: Double
     @NSManaged public var feels_like: Double
-    @NSManaged public var temp_min: Double
+    @NSManaged public var temp: Double
     @NSManaged public var temp_max: Double
+    @NSManaged public var temp_min: Double
     @NSManaged public var weatherInfo: CDWeatherInfo?
 
 }

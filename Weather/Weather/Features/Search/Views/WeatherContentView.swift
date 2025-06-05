@@ -60,7 +60,7 @@ struct WeatherContentView: View {
         name: "Lviv",
         main: WeatherInfoMain(temp: 1, feels_like: 1, temp_min: 1, temp_max: 1),
         weather: [WeatherInfoDetails(id: 1, main: "Clean", icon: "10d")],
-        sys: SysDetails(country: "UA", sunrise: 1, sunset: 1)
+        sys: SysDetails(country: "UA", sunrise: 1, sunset: 1), coord: WeatherCoordinates(lat: 1, lon: 1)
     )
     @Previewable @State var loading = false
     
